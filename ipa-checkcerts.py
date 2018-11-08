@@ -162,6 +162,7 @@ class certcheck(object):
 
         try:
             result = ipautil.run(args)
+            logger.debug('FAIL: %s', result)
         except ipautil.CalledProcessError as e:
             self.failure('Validation of %s failed: %s'
                          % (file, e))
@@ -543,8 +544,8 @@ class certcheck(object):
                 self.failure('Unable to find request for serial %s' %
                              serial)
             except Exception as e:
-                self.failure('Failed to load request for serial %s' %
-                             serial)
+                self.failure('Failed to load request for serial %s, \
+                             failure: %s' % (serial, e))
             else:
                 s = entries[0].get('extdata-req--005fsubject--005fname')
                 if s is None:
@@ -897,6 +898,7 @@ class certcheck(object):
                     self.failure('Group of %s is %s and should '
                                  'be %s' %
                                  (path, actual.gr_name, group))
+
 
 if __name__ == '__main__':
     args = parser.parse_args()
